@@ -1,17 +1,14 @@
 require('dotenv').config();
-
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const session = require('express-session');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
-const authenticateJWT = require('./middleware/authenticateJWT');
+const jwt = require('jsonwebtoken');
+const authenticateJWT = require('./middleware/authenticateJWT');  // Custom middleware for JWT authentication
 
+const app = express();
 const PORT = process.env.PORT || 5000;
 const jwtSecret = process.env.SECRET;
 const salt = bcrypt.genSaltSync(5);
@@ -78,109 +75,14 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// // Verify Auth Route
-// app.get('/api/verify', (req, res) => {
-//     const { token } = req.cookies;
-//     if (!token) return res.json(null);
-
-//     jwt.verify(token, jwtSecret, {}, async (err, clientData) => {
-//         if (err) return res.status(401).json({ message: "Token invalid" });
-
-//         const client = await Client.findById(clientData.id);
-//         if (!client) return res.status(404).json({ message: "User not found" });
-
-//         const { username, _id } = client;
-//         res.json({ username, _id });
-//     });
-// });
-
-// // Create Reservation
-// app.post('/api/reservation', authenticateJWT, async (req, res) => {
-//     const { carType, pickPlace, dropPlace, pickDate, dropDate, pickTime, dropTime, firstname, lastname, age, phone, email, address, city, zipcode } = req.body;
-//     const clientId = req.user.id;
-
-//     try {
-//         const reservation = new Reservation({
-//             owner: clientId,
-//             firstname, lastname, age, phone, email,
-//             address, city, zipcode, carType,
-//             pickPlace, dropPlace, pickDate, dropDate,
-//             pickTime, dropTime
-//         });
-
-//         await reservation.save();
-//         res.status(201).json(reservation);
-//     } catch (error) {
-//         console.error("Reservation Error:", error);
-//         res.status(500).json({ error: "Failed to create reservation" });
-//     }
-// });
-
-// // Get User Bookings
-// app.get('/api/bookings', authenticateJWT, async (req, res) => {
-//     const userId = req.user.id;
-//     try {
-//         const reservations = await Reservation.find({ owner: userId });
-//         res.json(reservations);
-//     } catch (e) {
-//         console.error("Booking Fetch Error:", e);
-//         res.status(500).json({ error: "Failed to fetch bookings" });
-//     }
-// });
-
-// // Cancel Booking
-// app.post('/api/cancel', authenticateJWT, async (req, res) => {
-//     const { bookingId } = req.body;
-//     try {
-//         const reservation = await Reservation.findOneAndDelete({ _id: bookingId, owner: req.user.id });
-//         if (!reservation) return res.status(404).json({ message: "Booking not found" });
-
-//         res.json({ message: "Booking cancelled successfully" });
-//     } catch (e) {
-//         console.error("Cancel Error:", e);
-//         res.status(500).json({ error: "Failed to cancel booking" });
-//     }
-// });
-
-// // Logout
-// app.post('/api/logout', (req, res) => {
-//     res.cookie('token', '', { httpOnly: true }).json({ message: "Logged out" });
-// });
-
-// // Start server
-// app.listen(PORT, () => {
-//     console.log(`🚀 Server is running at http://localhost:${PORT}`);
-// });
-const express = require('express');
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');  // CORS to allow cross-origin requests
-const cookieParser = require('cookie-parser');
-const Reservation = require('./models/Reservation'); // Assuming you have a Reservation model
-const app = express();
-const PORT = 5000;
-
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors());
-
-// Connect to MongoDB (replace with your MongoDB URI)
-mongoose.connect('mongodb://localhost/car-reservation', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('Connected to MongoDB');
-}).catch((err) => {
-    console.error('MongoDB connection error:', err);
-});
-
 // Create Reservation
-app.post('/api/reservation', async (req, res) => {
+app.post('/api/reservation', authenticateJWT, async (req, res) => {
     const { carType, pickPlace, dropPlace, pickDate, dropDate, pickTime, dropTime, firstname, lastname, age, phone, email, address, city, zipcode } = req.body;
+    const clientId = req.user.id;
 
     try {
         const reservation = new Reservation({
+            owner: clientId,
             firstname, lastname, age, phone, email,
             address, city, zipcode, carType,
             pickPlace, dropPlace, pickDate, dropDate,
@@ -195,10 +97,11 @@ app.post('/api/reservation', async (req, res) => {
     }
 });
 
-// Get User Bookings (No authentication required)
-app.get('/api/bookings', async (req, res) => {
+// Get User Bookings
+app.get('/api/bookings', authenticateJWT, async (req, res) => {
+    const userId = req.user.id;
     try {
-        const reservations = await Reservation.find(); // No user filtering, fetch all bookings
+        const reservations = await Reservation.find({ owner: userId });
         res.json(reservations);
     } catch (e) {
         console.error("Booking Fetch Error:", e);
@@ -207,10 +110,10 @@ app.get('/api/bookings', async (req, res) => {
 });
 
 // Cancel Booking
-app.post('/api/cancel', async (req, res) => {
+app.post('/api/cancel', authenticateJWT, async (req, res) => {
     const { bookingId } = req.body;
     try {
-        const reservation = await Reservation.findOneAndDelete({ _id: bookingId });
+        const reservation = await Reservation.findOneAndDelete({ _id: bookingId, owner: req.user.id });
         if (!reservation) return res.status(404).json({ message: "Booking not found" });
 
         res.json({ message: "Booking cancelled successfully" });
@@ -220,7 +123,7 @@ app.post('/api/cancel', async (req, res) => {
     }
 });
 
-// Logout (Clear the JWT token)
+// Logout
 app.post('/api/logout', (req, res) => {
     res.cookie('token', '', { httpOnly: true }).json({ message: "Logged out" });
 });
