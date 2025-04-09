@@ -13,7 +13,7 @@ export default {
     },
     extend: {
       colors:{
-        orange: "#ff4d30"
+        orange: "#ff00b0"
       }
     },
   },
