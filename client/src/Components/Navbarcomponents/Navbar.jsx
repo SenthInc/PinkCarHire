@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import logo from "../images/carlogo.png"
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../Context/Clientcontext';
@@ -11,7 +11,7 @@ import { UserContext } from '../../Context/Clientcontext';
 export default function Navbar(){
 
     const [isToggle, setIstoggle] = useState(false);
-    const {user} = useContext(UserContext);
+    useContext(UserContext);
     
 
     

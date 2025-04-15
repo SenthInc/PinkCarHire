@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import PhoneIcon from '@mui/icons-material/Phone';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import PhoneIcon from '@mui/icons-material/Phone';
+import React, { useContext, useEffect, useState } from 'react';
 import Banner from '../Components/Bodycomponents/Banner';
 import Footer from '../Components/Bodycomponents/Footer';
+import LinearColor from '../Components/Bodycomponents/linearprogress';
+import Accountbar from '../Components/Navbarcomponents/Accountbar';
 import Navbar from '../Components/Navbarcomponents/Navbar';
 import { UserContext } from '../Context/Clientcontext';
-import Accountbar from '../Components/Navbarcomponents/Accountbar';
-import LinearColor from '../Components/Bodycomponents/linearprogress';
 
 export default function Contact(){
 
@@ -69,7 +69,7 @@ export default function Contact(){
                         development as well as a learning specialist. Over 15 years of experience.</h3>
                         <h4 style={{cursor:"pointer"}} className="text-lg font-sans font-bold py-2 hover:text-orange"><PhoneIcon/> (123)- 456 789</h4>
                         <h4 style={{cursor:"pointer"}} className="text-lg font-sans font-bold  hover:text-orange"><EmailIcon/> carrentals@gmail.com</h4>
-                        <h4 style={{cursor:"pointer"}} className="text-lg font-sans font-bold py-2 hover:text-orange"><LocationOnIcon/> Kerala, India</h4>
+                        <h4 style={{cursor:"pointer"}} className="text-lg font-sans font-bold py-2 hover:text-orange"><LocationOnIcon/> Colombo, India</h4>
                     </div>
                     <div className="flex flex-col justify-center">                   
                             <label className="text-lg font-bold pt-3 font-sans">Full Name</label>

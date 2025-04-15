@@ -76,13 +76,16 @@ export default function Account(){
             <div className="">
            <div className={addClass()}>
             <Accountbar/>
+
             <Hero handleBookRideClick={handleBookRideClick}/>
+
+            <Reservationbox handleBookRideClick={handleBookRideClick}/>
             <Form reservationFormRef={reservationFormRef} toggleDiv={toggleDiv} carType={carType} setCarType={setCarType} pickPlace={pickPlace}
                 dropPlace={dropPlace} setPickPlace={setPickPlace} setDropPlace={setDropPlace} pickDate={pickDate} dropDate={dropDate}
                 setPickDate={setPickDate} setDropDate={setDropDate}
             />
             <Cards/>
-            <Reservationbox handleBookRideClick={handleBookRideClick}/>
+
             <Banner/>
             <Services/>
             <Reviews/>

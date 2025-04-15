@@ -59,12 +59,12 @@ export default function Bookcar({
       setTimeout(() => setShowwarning(false), 1500);
       return;
     }
-
+  
     if (!user) {
       navigate('/login');
       return;
     }
-
+  
     const reservationData = {
       carType,
       pickPlace,
@@ -82,32 +82,102 @@ export default function Bookcar({
       city,
       zipcode,
     };
-
+  
+    let reservationSaved = false;
+  
     try {
       await axios.post('http://localhost:5000/api/reservation', reservationData);
-
+      reservationSaved = true;
+    } catch (error) {
+      console.error("⚠️ Backend reservation failed:", error.message);
+      // You can notify the user too if you want
+    }
+  
+    try {
       const formData = new FormData();
       formData.append("access_key", "b317a408-bb69-40fb-85ad-3fd77039046b");
       formData.append("subject", "New Car Reservation");
       for (const key in reservationData) {
         formData.append(key, reservationData[key]);
       }
-
+  
       await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         body: formData,
       });
-
-      setSuccessMessage("Reservation successful! Redirecting to bookings...");
+  
+      // Now we inform the user
+      const message = reservationSaved
+        ? "Reservation successful! Redirecting to bookings..."
+        : "Reservation saved via email only. Backend might be down.";
+  
+      setSuccessMessage(message);
       setTimeout(() => {
         setSuccessMessage("");
         navigate('/account/bookings');
       }, 2000);
-
+  
     } catch (error) {
-      console.error("Reservation failed:", error);
+      console.error("❌ Web3Forms submission failed:", error.message);
+      alert("Reservation failed to submit via email. Please try again.");
     }
   };
+  
+  // const ReserveCar = async () => {
+  //   if (isReserveDisabled) {
+  //     setShowwarning(true);
+  //     setTimeout(() => setShowwarning(false), 1500);
+  //     return;
+  //   }
+
+  //   if (!user) {
+  //     navigate('/login');
+  //     return;
+  //   }
+
+  //   const reservationData = {
+  //     carType,
+  //     pickPlace,
+  //     dropPlace,
+  //     pickDate,
+  //     dropDate,
+  //     pickTime,
+  //     dropTime,
+  //     firstname,
+  //     lastname,
+  //     age,
+  //     phone,
+  //     email,
+  //     address,
+  //     city,
+  //     zipcode,
+  //   };
+
+  //   try {
+  //     await axios.post('http://localhost:5000/api/reservation', reservationData);
+
+  //     const formData = new FormData();
+  //     formData.append("access_key", "b317a408-bb69-40fb-85ad-3fd77039046b");
+  //     formData.append("subject", "New Car Reservation");
+  //     for (const key in reservationData) {
+  //       formData.append(key, reservationData[key]);
+  //     }
+
+  //     await fetch("https://api.web3forms.com/submit", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     setSuccessMessage("Reservation successful! Redirecting to bookings...");
+  //     setTimeout(() => {
+  //       setSuccessMessage("");
+  //       navigate('/account/bookings');
+  //     }, 2000);
+
+  //   } catch (error) {
+  //     console.error("Reservation failed:", error);
+  //   }
+  // };
 
   return (
     isDivVisible && (

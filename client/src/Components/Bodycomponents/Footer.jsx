@@ -1,6 +1,6 @@
-import React from 'react';
-import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import React from 'react';
 
 
 export default function Footer(){
@@ -15,11 +15,11 @@ export default function Footer(){
                             We have the perfect car to meet your needs.</p>
                             <h2 style={{cursor:"pointer"}} className="font-sans font-bold text-lg my-1 hover:text-orange"><PhoneIcon/> (123) -456-789</h2>
                             <h2 style={{cursor:"pointer"}} className="font-sans font-bold text-lg my-1 hover:text-orange"><EmailIcon/> carrentals@gmail.com</h2>
-                            <h2 style={{cursor:"pointer"}} className="font-sans text-lg my-1 hover:text-orange">Design by XpeedStudio</h2>
+                            <h2 style={{cursor:"pointer"}} className="font-sans text-lg my-1 hover:text-orange">Design by HABB</h2>
                         </div>
                         <div className="">
-                            <h2 className="font-sans font-bold text-2xl">COMPANY</h2>
-                            <p style={{cursor:"pointer"}} className="font-sans text-lg mt-1 hover:text-orange">Kerala</p>
+                            <h2 className="font-sans font-bold text-2xl">HABB</h2>
+                            <p style={{cursor:"pointer"}} className="font-sans text-lg mt-1 hover:text-orange">Colombo</p>
                             <p style={{cursor:"pointer"}} className="font-sans text-lg mt-1 hover:text-orange">Careers</p>
                             <p style={{cursor:"pointer"}} className="font-sans text-lg mt-1 hover:text-orange">Mobile</p>
                             <p style={{cursor:"pointer"}} className="font-sans text-lg mt-1 hover:text-orange">Blog</p>

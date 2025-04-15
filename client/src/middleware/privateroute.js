@@ -8,6 +8,6 @@ export default function Privateroute(){
     const {user} = useContext(UserContext);
     const navigate = useNavigate();
     if(!user){
-        navigate('/login')
+        navigate('/account')
     }
 }
